@@ -1,0 +1,163 @@
+<!-- FILEPATH: /c:/Repos/Minikube/web/index.html -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Calculon 2.0</title>
+    <style>
+        /* CSS styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #timer,
+        #result {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        body {
+            background-image: url("https://i.pinimg.com/originals/6a/6e/4e/6a6e4e2b5b0b0b0b0b0b0b0b0b0b0b0b.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 40%;
+            margin: auto;
+        }
+
+        .radio {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            align-items: baseline;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Calculon 2.0</h1>
+    <label for="input1">Input 1:</label>
+    <input type="text" class="input" name="input1" value="10">
+    <label for="input2">Input 2:</label>
+    <input type="text" class="input" name="input2" value="2">
+
+    <label for="operator">Operator:</label>
+    <div class="radio">
+        <label for="multiply">Multiply</label>
+        <input type="radio" id="multiply" name="operator" value="multiply" checked>
+        <label for="divide">Divide</label>
+        <input type="radio" id="divide" name="operator" value="divide">
+    </div>
+    <label for="special">Special sauce:</label>
+    <input type="text" class="input" name="special" value="1">
+    <label for="server">Server:</label>
+    <input type="text" class="input" name="server" value="127.0.0.1:3000">
+
+    <button id="calculate">Calculate</button>
+
+    <div id="timer"></div>
+    <div id="result"></div>
+</body>
+
+<script>
+    // Get button element
+    let button = document.getElementById("calculate");
+    let server = document.getElementsByName("server");
+    let input1 = document.getElementsByName("input1");
+    let input2 = document.getElementsByName("input2");
+    let operator = document.getElementsByName("operator");
+    let special = document.getElementsByName("special");
+    let result = document.getElementById("result");
+    let timer = document.getElementById("timer");
+
+    if (operator[0].checked) {
+        var operatorValue = operator[0].value;
+    } else {
+        var operatorValue = operator[1].value;
+    }
+
+    let timerInterval
+    // Call API endpoint on button click and start timer
+    button.addEventListener("click", function () {
+        clearInterval(timerInterval);
+
+        let start = Date.now();
+        let url = "http://" + server[0].value + "/" + operatorValue + "?a=" + input1[0].value + "&b=" + input2[0].value + "&timeout=" + special[0].value;
+
+        // Start timer
+        timer.innerHTML = "Calculating...";
+        result.innerHTML = "";
+
+        // Start timer
+        let seconds = 0;
+        timerInterval = setInterval(function () {
+            seconds++;
+            timer.innerHTML = "Server resting: " + (Number.parseInt(special[0].value) - seconds) + "s";
+        }, 1000);
+
+        fetch(url)
+            .catch(error => {
+                clearInterval(timerInterval);
+                timer.innerHTML = error;
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    clearInterval(timerInterval);
+                    timer.innerHTML = data.error;
+                    return;
+                }
+
+                // Await until special[0].value === seconds
+                sleep(special[0].value * 1000 - seconds * 1000).then(() => {
+                    clearInterval(timerInterval);
+                    let end = Date.now();
+                    let time = end - start;
+                    timer.innerHTML = "Server rested: " +Math.round(time / 1000) + "s";
+                    result.innerHTML = "Result: " + data.data;
+                });
+            });
+    });
+
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+</script>
+
+</html>
