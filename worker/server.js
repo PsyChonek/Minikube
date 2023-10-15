@@ -1,5 +1,7 @@
 // Import the framework and instantiate it
 import Fastify from "fastify";
+import { Multiply, Divide } from "./work.js";
+
 const fastify = Fastify({
   logger: true,
 });
@@ -20,29 +22,21 @@ fastify.get("/multiply", async (request, reply) => {
     return;
   }
   isWorking = true;
-  const { a, b, timeout } = request.query;
-  delay(timeout * 1000).then(() => {
-    isWorking = false;
-  });
-  reply.send({ data: a * b });
+  const { a, b, special } = request.query;
+  reply.send(Multiply(a, b, special));
+  isWorking = false;
 });
 
 // Divide get values from query string
-fastify.get("/divide",  async (request, reply) => {
+fastify.get("/divide", async (request, reply) => {
   if (isWorking) {
     reply.send({ error: "Server is busy" });
     return;
   }
   isWorking = true;
-  const { a, b, timeout } = request.query;
-  delay(timeout * 1000).then(() => {
-    isWorking = false;
-  });
-  if (b === 0 || b === "0") {
-    // Stop server
-    process.exit(1);
-  }
-  reply.send({ data: a / b });
+  const { a, b, special } = request.query;
+  reply.send(Divide(a, b, special));
+  isWorking = false;
 });
 
 // Run the server!
@@ -50,10 +44,4 @@ try {
   await fastify.listen({ port: 3000 });
 } catch (err) {
   process.exit(1);
-}
-
-function delay(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
 }

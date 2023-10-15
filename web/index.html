@@ -117,7 +117,7 @@
         clearInterval(timerInterval);
 
         let start = Date.now();
-        let url = "http://" + server[0].value + "/" + operatorValue + "?a=" + input1[0].value + "&b=" + input2[0].value + "&timeout=" + special[0].value;
+        let url = "http://" + server[0].value + "/" + operatorValue + "?a=" + input1[0].value + "&b=" + input2[0].value + "&special=" + special[0].value;
 
         // Start timer
         timer.innerHTML = "Calculating...";
@@ -127,7 +127,7 @@
         let seconds = 0;
         timerInterval = setInterval(function () {
             seconds++;
-            timer.innerHTML = "Server resting: " + (Number.parseInt(special[0].value) - seconds) + "s";
+            timer.innerHTML = "Server is working: " + seconds + "s";
         }, 1000);
 
         fetch(url)
@@ -143,14 +143,13 @@
                     return;
                 }
 
-                // Await until special[0].value === seconds
-                sleep(special[0].value * 1000 - seconds * 1000).then(() => {
-                    clearInterval(timerInterval);
-                    let end = Date.now();
-                    let time = end - start;
-                    timer.innerHTML = "Server rested: " +Math.round(time / 1000) + "s";
-                    result.innerHTML = "Result: " + data.data;
-                });
+                clearInterval(timerInterval);
+
+                let end = Date.now();
+                let time = end - start;
+                timer.innerHTML = "Server responded in: " + seconds + "s";
+                result.innerHTML = "Result: " + data;
+
             });
     });
 
