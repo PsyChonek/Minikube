@@ -1,15 +1,15 @@
 // Import the framework and instantiate it
 import Fastify from "fastify";
+import cros from "@fastify/cors";
 import { Multiply, Divide } from "./work.js";
 
 const fastify = Fastify({
   logger: true,
 });
 
-fastify.register(import("@fastify/rate-limit"), {
-  max: 1,
-  timeWindow: "1 minute",
-  global: true,
+fastify.register(cros, {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 });
 
 // Declare a route
@@ -40,8 +40,4 @@ fastify.get("/divide", async (request, reply) => {
 });
 
 // Run the server!
-try {
-  await fastify.listen({ port: 3000 });
-} catch (err) {
-  process.exit(1);
-}
+fastify.listen({ port: 3000, host: "0.0.0.0" });

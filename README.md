@@ -18,15 +18,40 @@ https://minikube.sigs.k8s.io/docs/start/
 
 https://minikube.sigs.k8s.io/docs/handbook/pushing/#1-pushing-directly-to-the-in-cluster-docker-daemon-docker-env
 
-### Run a container
+### Create Deployment
 
     kubectl create deployment web --image=danvazy/minikube_web:latest
     kubectl expose deployment web --type=NodePort --port=8080
 
-#### To remove
+#### Remove Deployment
 
     kubectl delete deployment web
     kubectl delete service web
+
+### Expose Service
+
+    kubectl expose deployment web --type=NodePort --port=8080
+
+#### Remove Service
+
+    kubectl delete service web
+
+### Tunnel service
+
+    minikube service web
+
+### Autoscale
+
+    minikube addons enable metrics-server
+    kubectl autoscale deployment worker --min=1 --max=30 --cpu-percent=10
+
+### Dashboard
+
+    minikube dashboard
+
+### YAML
+
+    kubectl apply -f deployment.yaml
 
 ## Kubernetes
 
