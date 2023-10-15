@@ -80,6 +80,7 @@ spec:
     kind: Deployment
     name: api
   targetCPUUtilizationPercentage: 50
+  
 ---
 # Expose the deployment as a service
 apiVersion: v1

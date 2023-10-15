@@ -39,5 +39,9 @@ fastify.get("/divide", async (request, reply) => {
   isWorking = false;
 });
 
+fastify.server.keepAliveTimeout = 1
+fastify.server.headersTimeout = 1
+fastify.server.maxConnections = 1
+
 // Run the server!
 fastify.listen({ port: 3000, host: "0.0.0.0" });
