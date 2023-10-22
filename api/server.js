@@ -23,7 +23,11 @@ fastify.get("/multiply", async (request, reply) => {
   }
   isWorking = true;
   const { a, b, special } = request.query;
-  reply.send(Multiply(a, b, special));
+  reply.send({
+    result: Multiply(a, b, special),
+    error: "",
+    podName: process.env.POD_NAME || "No pod name",
+  });
   isWorking = false;
 });
 
@@ -35,13 +39,17 @@ fastify.get("/divide", async (request, reply) => {
   }
   isWorking = true;
   const { a, b, special } = request.query;
-  reply.send(Divide(a, b, special));
+  reply.send({
+    result: Divide(a, b, special),
+    error: "",
+    podName: process.env.POD_NAME || "No pod name",
+  });
   isWorking = false;
 });
 
-fastify.server.keepAliveTimeout = 1
-fastify.server.headersTimeout = 1
-fastify.server.maxConnections = 1
+fastify.server.keepAliveTimeout = 1;
+fastify.server.headersTimeout = 1;
+fastify.server.maxConnections = 1;
 
 // Run the server!
 fastify.listen({ port: 3000, host: "0.0.0.0" });
