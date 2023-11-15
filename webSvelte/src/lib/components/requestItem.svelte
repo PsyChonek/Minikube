@@ -73,7 +73,7 @@
   }
 
   .button {
-    background-color: #4caf50;
+    background-color: rgb(175, 79, 76);
     border: none;
     color: white;
     padding: 5px 10px;
