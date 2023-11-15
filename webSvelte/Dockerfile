@@ -30,8 +30,11 @@ RUN npm install --only=production
 # Copy build from development container
 COPY --from=development /app/build .
 
+# Set the environment variables
+ENV PORT=80
+
 # Expose port 3000
-EXPOSE 3000
+EXPOSE 80
 
 # Start the Node.js server
 CMD ["node", "index.js"]

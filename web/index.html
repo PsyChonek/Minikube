@@ -4,7 +4,7 @@
 <html>
 
 <head>
-    <title>Calculon 2.0</title>
+    <title>Calculon 1.0</title>
     <style>
         /* CSS styling */
         body {
@@ -113,7 +113,7 @@
 
     let timerInterval
     // Call API endpoint on button click and start timer
-    button.addEventListener("click", function () {
+    button.addEventListener("click", async function () {
         clearInterval(timerInterval);
 
         let start = Date.now();

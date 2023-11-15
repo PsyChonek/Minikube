@@ -6,4 +6,6 @@ export interface Calculation {
   server: string;
   podName: string;
   result: number | string;
+  time: number;
+  waiting: boolean;
 }
